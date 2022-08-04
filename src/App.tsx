@@ -22,7 +22,7 @@ function App() {
         case "mainPlacement":
           return <MainPlacement entity={opt.entity} parentId={opt.parentId}/>;
         default:
-          return <Main />
+          return <Main menuId={opt.menuId}/>
       }
     } catch (error) {
       console.log([error, 'error']);

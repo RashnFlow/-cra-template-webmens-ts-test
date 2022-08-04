@@ -7,7 +7,7 @@ declare global {
     action: string;
     entity: string;
     path: string;
-    menuId: string;
+    menuId: number;
     [index: string]: any
   };
 
