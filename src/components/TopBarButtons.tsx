@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
 import { Button } from "@webmens-ru/ui_lib";
-import styled from "styled-components";
 import { TColumnItem, TRowID } from "@webmens-ru/ui_lib/dist/components/grid";
-import { useLazyGetButtonAddQuery, useLazyGetDynamicButtonItemsQuery, useSendDataOnButtonClickMutation } from "../pages/main/mainApi";
+import { useEffect } from "react";
+import styled from "styled-components";
 import { axiosInst } from "../app/api/baseQuery";
 import { IGridState } from "../pages/main";
+import { useLazyGetButtonAddQuery, useLazyGetDynamicButtonItemsQuery, useSendDataOnButtonClickMutation } from "../pages/main/mainApi";
 
-interface TopBarButtonsProps {
+interface ITopBarButtonsProps {
   involvedState: {
     schema: TColumnItem[]
     grid: IGridState;
@@ -16,7 +16,23 @@ interface TopBarButtonsProps {
   entity?: string;
 }
 
-export function TopBarButtons({ involvedState, excelTitle, entity }: TopBarButtonsProps) {
+interface IActionItem {
+  id: number;
+  entityCode: string;
+  label: string;
+  handler: string;
+  params: IActionItemParams | null;
+}
+
+interface IActionItemParams {
+  output: {
+    type: string;
+    documentName: string;
+  };
+  columns: string[];
+}
+
+export function TopBarButtons({ involvedState, excelTitle, entity }: ITopBarButtonsProps) {
   const [getItems, items] = useLazyGetDynamicButtonItemsQuery();
   const [getButtonAdd, buttonAdd] = useLazyGetButtonAddQuery();
   const [sendData] = useSendDataOnButtonClickMutation();
@@ -29,14 +45,35 @@ export function TopBarButtons({ involvedState, excelTitle, entity }: TopBarButto
     }
   }, [getItems, getButtonAdd, entity]);
 
-  const itemClickHandler = (item: any) => {
-    const body = grid.grid!.filter((item) => {
-      const id = typeof item.id === "object" ? item.id.title : item.id
-      return checkboxes.includes(id)
+  const itemClickHandler = async (item: IActionItem) => {
+    let body = grid.grid!.filter((row) => {
+      const id = typeof row.id === "object" ? row.id.title : row.id
+      return checkboxes.length ? checkboxes.includes(id) : true
     })
 
-    if (body)
-      sendData({ url: item.handler, body });
+    if (item.params && "columns" in item.params) {
+      // @ts-ignore
+      body = body.map(row => Object.fromEntries(
+        Object.entries(row).filter(([key]) => item.params?.columns.includes(key))
+      ))
+    }
+
+    if (body.length) {
+      if (item.params?.output?.type === "blob") {
+        const response = await axiosInst.post(item.handler, body, {
+          responseType: item.params.output.type
+        })
+
+        const link = document.createElement("a")
+        const title = item.params?.output?.documentName //TODO: Брать название из item.params?.output?.documentName/Title 
+        link.href = URL.createObjectURL(new Blob([response.data]))
+        link.download = title //TODO: Убрать дату и расширение. Добавить расширение в title
+        link.click()
+      } else {
+        sendData({ url: item.handler, body });
+      }
+    }
+
   };
 
   const handleGearClick = async (item: any) => {

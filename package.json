@@ -6,7 +6,7 @@
     "@ckeditor/ckeditor5-build-classic": "^34.1.0",
     "@ckeditor/ckeditor5-react": "^5.0.2",
     "@reduxjs/toolkit": "^1.8.2",
-    "@webmens-ru/ui_lib": "0.18.9",
+    "@webmens-ru/ui_lib": "0.18.10",
     "axios": "^0.27.2",
     "react": "^18.1.0",
     "react-data-grid": "^7.0.0-beta.14",
