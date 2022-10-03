@@ -1,4 +1,4 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { mainApi } from "../../pages/main/mainApi";
 import { mainSlice } from "../../pages/main/mainSlice";
 import { mainDetailApi } from "../../pages/mainDetail/mainDetailApi";
@@ -18,6 +18,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(mainApi.middleware)
+      .concat(mainPlacementApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;

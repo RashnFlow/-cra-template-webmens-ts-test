@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useReducer } from "react";
 import styled from "styled-components";
-import { Grid, Loader } from "@webmens-ru/ui_lib";
+import { Grid2 as Grid, Loader } from "@webmens-ru/ui_lib";
 import { initialState, reducer } from "./reducer";
 import { TRowID, TRowItem } from "@webmens-ru/ui_lib/dist/components/grid";
 import { TopBarButtons } from "../../components/TopBarButtons";
@@ -9,6 +9,7 @@ import {
   useLazyGetSchemaQuery,
   useSaveSchemaMutation,
 } from "./mainDetailApi";
+import { TCellItem, TRawColumnItem } from "@webmens-ru/ui_lib/dist/components/grid_2";
 
 export interface MainDetailProps {
   title?: string,
@@ -51,7 +52,7 @@ export function MainDetail({ title, entity, body = [] }: MainDetailProps) {
     })
   }
 
-  const onCellClick = (cell: TRowItem) => {
+  const onCellClick = (cell: TCellItem) => {
     if (process.env.NODE_ENV === "production") {
       switch (cell.type) {
         case "openPath":
@@ -68,6 +69,8 @@ export function MainDetail({ title, entity, body = [] }: MainDetailProps) {
     }
   };
 
+  const windowInnerHeight = window.innerHeight
+
   if (!mainDetail.inited) {
     return <Loader />;
   }
@@ -82,12 +85,21 @@ export function MainDetail({ title, entity, body = [] }: MainDetailProps) {
           excelTitle={title}
         />
       </Container>
-      <Grid
+      {/* <Grid
         column={mainDetail.schema}
         row={mainDetail.grid.grid}
         footer={mainDetail.grid.footer}
         height={100}
         isShowCheckboxes
+        onChangeCheckboxes={checkboxesHandler}
+        columnMutation={handleSchemaMutation}
+        onCellClick={onCellClick}
+      /> */}
+      <Grid
+        columns={mainDetail.schema}
+        rows={mainDetail.grid.grid}
+        footer={mainDetail.grid.footer}
+        height={windowInnerHeight - 46}
         onChangeCheckboxes={checkboxesHandler}
         columnMutation={handleSchemaMutation}
         onCellClick={onCellClick}

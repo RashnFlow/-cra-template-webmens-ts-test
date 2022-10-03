@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-import { OpenSansLight, OpenSansRegular, OpenSansSemiBold, OpenSansBold, OpenSansExtraBold } from "../fonts/OpenSans";
+import { OpenSansBold, OpenSansExtraBold, OpenSansLight, OpenSansRegular, OpenSansSemiBold } from "../fonts/OpenSans";
 
 export const GlobalStyles = createGlobalStyle`
   @font-face {

@@ -1,18 +1,19 @@
-import { TColumnItem, TRowID } from "@webmens-ru/ui_lib/dist/components/grid";
+import { TRowID } from "@webmens-ru/ui_lib/dist/components/grid";
+import { TColumnType, TRawColumnItem } from "@webmens-ru/ui_lib/dist/components/grid_2";
 import { IGridState } from "../main/mainSlice";
 
 export interface IMainDetailReducerState {
   grid: IGridState;
-  schema: TColumnItem[];
+  schema: TRawColumnItem[];
   checkboxes: TRowID[];
   inited: boolean;
 }
 
 export type IMainDetailReducerAction =
   | { type: "SET_GRID", grid: IGridState }
-  | { type: "SET_SCHEMA", schema: TColumnItem[] }
+  | { type: "SET_SCHEMA", schema: TRawColumnItem[] }
   | { type: "SET_CHECKBOXES", checkboxes: TRowID[] }
-  | { type: "INIT", payload: { grid: IGridState, schema: TColumnItem[] } }
+  | { type: "INIT", payload: { grid: IGridState, schema: TRawColumnItem[] } }
 
 export const initialState: IMainDetailReducerState = {
   grid: {},

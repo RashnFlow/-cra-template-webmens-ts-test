@@ -1,20 +1,18 @@
-import React from "react";
 import { FilterAlpha as Filter } from "@webmens-ru/ui_lib";
-import { TFilter } from "@webmens-ru/ui_lib/dist/components/filter_2/types"; 
+import { TFilter } from "@webmens-ru/ui_lib/dist/components/filter_2/types";
 import { setCurrentFilter, useLazyGetDynamicSelectItemsQuery } from "..";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
-import CopyToClipboard from "../../../components/copyToClipboard";
+import { TopBarButtons } from "../../../components/TopBarButtons";
 import { useFilterQuery } from "../hooks/useFilterQuery";
 import ControlBar from "./control_bar";
-import { TopBarButtons } from "../../../components/TopBarButtons";
 
-export function TopBar() {
+export function TopBar({ parentId }: { parentId: number }) {
   const { mainPlacementSlice } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
-  const filterProps = useFilterQuery();  
+  const filterProps = useFilterQuery({ parentId });  
 
-  const setFilter = (filter: TFilter) => {
+  const setFilter = (filter: TFilter) => {    
     dispatch(setCurrentFilter(filter));
   };
 

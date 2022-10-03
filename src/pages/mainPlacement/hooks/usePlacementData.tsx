@@ -1,18 +1,15 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo } from "react";
+import { useCallback, useLayoutEffect } from "react";
 import { setCurrentFilter, setIsLoading } from "..";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { getFilterResponse } from "../../../app/utils/filterResponse";
 import { concatFieldsAndAllFields } from "../../../app/utils/formatters/fields";
 import {
-  useLazyGetFiltersQuery,
-  useLazyGetAllFieldsQuery,
-  useLazyGetSchemaQuery,
-  useLazyGetFieldsQuery,
-  useLazyGetGridQuery,
+  useLazyGetAllFieldsQuery, useLazyGetFieldsQuery, useLazyGetFiltersQuery, useLazyGetGridQuery, useLazyGetSchemaQuery
 } from "../mainPlacementApi";
-import { setGrid, setSchema } from "../mainPlacementSlice"
+import { setGrid, setSchema } from "../mainPlacementSlice";
 
-export const useData = ({entity, parentId}: {entity: string, parentId: any}) => {
+export const usePlacementData = ({ entity, parentId }: { entity: string, parentId: any }) => {
+  
   const { mainPlacementSlice } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
@@ -52,14 +49,14 @@ export const useData = ({entity, parentId}: {entity: string, parentId: any}) => 
       const filterResponse = getFilterResponse(correctFields);
       const grid = await getGrid({
         entity,
-        filter: `parentId=${mainPlacementSlice.parentId}&` + ((mainPlacementSlice.filterResponse !== null && mainPlacementSlice.filterResponse !== undefined) ? mainPlacementSlice.filterResponse : filterResponse),
+        filter: `parentId=${parentId}&` + ((mainPlacementSlice.filterResponse !== null && mainPlacementSlice.filterResponse !== undefined) ? mainPlacementSlice.filterResponse : filterResponse),
       });
 
       dispatch(setSchema(schema.data))
       dispatch(setGrid(grid.data))
     }
     dispatch(setIsLoading(false));
-  }, [dispatch, entity, getAllFields, getCurrentFiltersFields, getFilters, getGrid, getSchema, mainPlacementSlice.filterResponse, mainPlacementSlice.parentId]);
+  }, [dispatch, entity, getAllFields, getCurrentFiltersFields, getFilters, getGrid, getSchema, mainPlacementSlice.filterResponse, parentId]);
 
   useLayoutEffect(() => {
     init();

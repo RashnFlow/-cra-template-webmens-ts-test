@@ -1,10 +1,11 @@
-import React, { useCallback, useMemo } from "react";
-import { Grid, Loader, Toolbar } from "@webmens-ru/ui_lib";
+import { Grid2 as Grid, Loader, Toolbar } from "@webmens-ru/ui_lib";
 import { TRowID, TRowItem } from "@webmens-ru/ui_lib/dist/components/grid/types";
-import { IListItem } from "@webmens-ru/ui_lib/dist/components/toolbar";
+import { TCellItem } from "@webmens-ru/ui_lib/dist/components/grid_2";
+import { BlockItems } from "@webmens-ru/ui_lib/dist/components/toolbar";
+import { useCallback, useMemo } from "react";
 import { useSaveSchemaMutation } from "..";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
-import { setCheckboxes, setFilterResponse, setSchema } from "../mainPlacementSlice";
+import { setCheckboxes, setSchema } from "../mainPlacementSlice";
 
 export function GridWrapper() {
   const { mainPlacementSlice, mainPlacementApi } = useAppSelector((state) => state);
@@ -12,7 +13,7 @@ export function GridWrapper() {
   const dispatch = useAppDispatch();
   const [schemaMutation] = useSaveSchemaMutation();
 
-  const onCellClick = useCallback((cell: TRowItem) => {
+  const onCellClick = useCallback((cell: TCellItem) => {
     if (process.env.NODE_ENV === "production") {
       console.log(cell);
       
@@ -65,16 +66,14 @@ export function GridWrapper() {
     [dispatch, grid],
   );
 
-  const handleToolbarItemClick = (item: IListItem) => {
-    if (item.params && item.params.url !== null) {
-      dispatch(setFilterResponse(item.params.url))
-    }
+  const handleToolbarItemClick = (item: BlockItems) => {
+    // if (item.params && item.params.url !== null) {
+    //   dispatch(setFilterResponse(item.params.url))
+    // }
   }
   
 
   if (mainPlacementSlice.isLoading) return <Loader />;
-
-  console.log(mainPlacementSlice)
   return (
     <>
       {grid?.header?.blocks && (
@@ -84,12 +83,10 @@ export function GridWrapper() {
         />
       )}
       <Grid
-        column={column}
-        row={grid?.grid}
+        columns={column}
+        rows={grid?.grid}
         footer={grid?.footer}
-        height={140}
         columnMutation={handleSchemaMutation}
-        isShowCheckboxes
         onChangeCheckboxes={checkboxesHandler}
         onCellClick={onCellClick}
       />

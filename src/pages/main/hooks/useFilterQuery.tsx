@@ -1,18 +1,8 @@
 import { TField } from "@webmens-ru/ui_lib/dist/components/filter/types";
 import { useCallback, useMemo } from "react";
 import {
-  setFilterResponse,
-  useAddFieldMutation,
-  useDeleteFieldMutation,
-  useCreateFilterMutation,
-  useUpdateFilterMutation,
-  useDeleteFilterMutation,
-  useLazyGetFieldsQuery,
-  useUpdateFiltersOrderMutation,
-  useUpdateFieldMutation,
-  useLazyGetGridQuery,
-  setIsLoading,
-  setGrid,
+  setFilterResponse, setIsLoading, useAddFieldMutation, useCreateFilterMutation, useDeleteFieldMutation, useDeleteFilterMutation,
+  useLazyGetFieldsQuery, useUpdateFieldMutation, useUpdateFilterMutation, useUpdateFiltersOrderMutation
 } from "..";
 import { axiosInst } from "../../../app/api/baseQuery";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
@@ -30,29 +20,19 @@ export const useFilterQuery = () => {
   const [createField] = useAddFieldMutation();
   const [deleteField] = useDeleteFieldMutation();
   const [getFieldsQuery] = useLazyGetFieldsQuery();
-  const [getGrid] = useLazyGetGridQuery();  
 
   const onSearch = useCallback(
-    async (fields: TField[]) => {
+    async (fields: TField[]) => {      
       dispatch(setIsLoading(true));
+      console.log(fields);
+      
       const filterResponse = getFilterResponse(fields);
-      const grid = await getGrid({
-        entity: mainSlice.currentTab.params.entity,
-        filter: filterResponse,
-      });
       
       getFieldsQuery(mainSlice.currentFilter.id);
       dispatch(setFilterResponse(filterResponse));
-      dispatch(setGrid(grid.data))
       dispatch(setIsLoading(false));
     },
-    [
-      dispatch,
-      getFieldsQuery,
-      getGrid,
-      mainSlice.currentFilter,
-      mainSlice.currentTab,
-    ],
+    [dispatch, getFieldsQuery, mainSlice.currentFilter],
   );
 
   const updateField = async (filter: TField, param: string) => {

@@ -1,25 +1,15 @@
 import { TField } from "@webmens-ru/ui_lib/dist/components/filter/types";
 import { useCallback, useMemo } from "react";
 import {
-  setFilterResponse,
-  useAddFieldMutation,
-  useDeleteFieldMutation,
-  useCreateFilterMutation,
-  useUpdateFilterMutation,
-  useDeleteFilterMutation,
-  useLazyGetFieldsQuery,
-  useUpdateFiltersOrderMutation,
-  useUpdateFieldMutation,
-  useLazyGetGridQuery,
-  setIsLoading,
-  setGrid,
+  setFilterResponse, setIsLoading, useAddFieldMutation, useCreateFilterMutation, useDeleteFieldMutation, useDeleteFilterMutation,
+  useLazyGetFieldsQuery, useUpdateFieldMutation, useUpdateFilterMutation, useUpdateFiltersOrderMutation
 } from "..";
 import { axiosInst } from "../../../app/api/baseQuery";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { getFilterResponse } from "../../../app/utils/filterResponse";
 import { concatFieldsAndAllFields } from "../../../app/utils/formatters/fields";
 
-export const useFilterQuery = () => {
+export const useFilterQuery = ({ parentId }: { parentId: number }) => {
   const dispatch = useAppDispatch();
   const { mainPlacementSlice, mainPlacementApi } = useAppSelector((state) => state);
   const [createFilter] = useCreateFilterMutation();
@@ -30,23 +20,17 @@ export const useFilterQuery = () => {
   const [createField] = useAddFieldMutation();
   const [deleteField] = useDeleteFieldMutation();
   const [getFieldsQuery] = useLazyGetFieldsQuery();
-  const [getGrid] = useLazyGetGridQuery();  
 
   const onSearch = useCallback(
-    async (fields: TField[]) => {
-      dispatch(setIsLoading(true));
+    async (fields: TField[]) => {      
+      dispatch(setIsLoading(true));      
       const filterResponse = getFilterResponse(fields);
-      const grid = await getGrid({
-        entity: mainPlacementSlice.entity,
-        filter: filterResponse,
-      });
       
       getFieldsQuery(mainPlacementSlice.currentFilter.id);
       dispatch(setFilterResponse(filterResponse));
-      dispatch(setGrid(grid.data))
       dispatch(setIsLoading(false));
     },
-    [dispatch, getFieldsQuery, getGrid, mainPlacementSlice.currentFilter, mainPlacementSlice.entity],
+    [dispatch, getFieldsQuery, mainPlacementSlice.currentFilter],
   );
 
   const updateField = async (filter: TField, param: string) => {

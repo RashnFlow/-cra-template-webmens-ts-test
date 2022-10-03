@@ -1,8 +1,9 @@
-import { TRowItem, TRowID, TColumnItem } from '@webmens-ru/ui_lib/dist/components/grid/types/index';
 import { createSlice } from "@reduxjs/toolkit";
 import { TFilter } from "@webmens-ru/ui_lib/dist/components/filter/types";
+import { TColumnItem, TRowID, TRowItem } from '@webmens-ru/ui_lib/dist/components/grid/types/index';
+import { TRawColumnItem } from "@webmens-ru/ui_lib/dist/components/grid_2";
 import { Item } from "@webmens-ru/ui_lib/dist/components/menu/types";
-import { IBlockItem } from '@webmens-ru/ui_lib/dist/components/toolbar';
+import { IToolbarBlock } from '@webmens-ru/ui_lib/dist/components/toolbar';
 
 interface IState {
   currentTab: Item;
@@ -15,12 +16,12 @@ interface IState {
   isLoading: boolean;
   isError: boolean;
   grid: IGridState;
-  schema: TColumnItem[]
+  schema: TRawColumnItem[]
 }
 
 export interface IGridState {
   header?: {
-    blocks: IBlockItem[]
+    blocks: IToolbarBlock[]
   };
   grid?: TRowItem[];
   footer?: TRowItem[];

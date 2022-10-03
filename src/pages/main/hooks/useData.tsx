@@ -4,13 +4,9 @@ import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { getFilterResponse } from "../../../app/utils/filterResponse";
 import { concatFieldsAndAllFields } from "../../../app/utils/formatters/fields";
 import {
-  useLazyGetFiltersQuery,
-  useLazyGetAllFieldsQuery,
-  useLazyGetSchemaQuery,
-  useLazyGetFieldsQuery,
-  useLazyGetGridQuery,
+  useLazyGetAllFieldsQuery, useLazyGetFieldsQuery, useLazyGetFiltersQuery, useLazyGetGridQuery, useLazyGetSchemaQuery
 } from "../mainApi";
-import { setGrid, setSchema } from "../mainSlice"
+import { setGrid, setSchema } from "../mainSlice";
 
 export const useData = () => {
   const { mainSlice } = useAppSelector((state) => state);

@@ -1,25 +1,21 @@
-import React, { useEffect } from "react";
-import { Loader } from "@webmens-ru/ui_lib";
-import { GridWrapper } from "./components/GridWrapper";
+import { useEffect } from "react";
+import { setCheckboxes, setEntity, setFilterResponse, setSchema, setTitle, useLazyGetTitleQuery, useSaveSchemaMutation } from ".";
+import { useAppDispatch, useAppSelector } from "../../app/store/hooks";
+import { GridWrapper } from "../../components/GridWrapper";
 import { TopBar } from "./components/TopBar";
-import { useData } from "./hooks/useData";
-import { useAppDispatch } from "../../app/store/hooks";
-import { setEntity, setTitle, setParentId } from ".";
-import { useLazyGetTitleQuery } from ".";
+import { usePlacementData } from "./hooks/usePlacementData";
 
 export interface MainPlacementProps {
   entity: string,
   parentId: any
 }
 
-export default function MainPlacement({ entity, parentId}: MainPlacementProps) {
+export default function MainPlacement({ entity, parentId }: MainPlacementProps) {
   const dispatch = useAppDispatch();
+  const { mainPlacementSlice, mainPlacementApi } = useAppSelector((state) => state)  
+  const [schemaMutation] = useSaveSchemaMutation()
   const [getTitle] = useLazyGetTitleQuery()
-  useData({entity, parentId});
-
-  useEffect(() => {
-    dispatch(setParentId(parentId));
-  }, [dispatch, parentId]);
+  usePlacementData({ entity, parentId });
 
   useEffect(() => {
     dispatch(setEntity(entity));
@@ -30,8 +26,16 @@ export default function MainPlacement({ entity, parentId}: MainPlacementProps) {
 
   return (
     <>
-      <TopBar />
-      <GridWrapper />
+      <TopBar parentId={parentId} />
+      <GridWrapper
+        slice={mainPlacementSlice}
+        api={mainPlacementApi}
+        dispatch={dispatch}
+        onShemaMutation={schemaMutation}
+        checkboxesSetter={setCheckboxes}
+        schemaSetter={setSchema}
+        filterSetter={setFilterResponse}
+      />
     </>
   );
 }
